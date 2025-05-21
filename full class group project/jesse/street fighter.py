@@ -15,5 +15,5 @@ pygame.display.set_caption("Street Fighter")
 
 clock = pygame.time.Clock()
 
-#test
+#test2
 
