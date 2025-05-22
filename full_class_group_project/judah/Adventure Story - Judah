@@ -1,1 +1,32 @@
 #This is a 2d graphical Adventure game coded in Python.
+#Purpose is to Define a map and let the player move around it
+# Define our map: 1 = wall, 0 = path
+# 0,0 is the top left of the map
+# moving up decreases the y location and
+# moving left decreases the x location and vice versa
+
+Map = [
+    [1, 1, 1, 1, 1, 1, 1, 1, 6, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 5, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 2, 1],
+    [1, 1, 1, 1, 1, 0, 0, 1, 2, 1],
+    [1, 1, 1, 1, 1, 0, 0, 3, 2, 1],
+    [1, 3, 1, 1, 1, 3, 1, 1, 1, 1],
+    [1, 0, 1, 3, 0, 0, 2, 2, 4, 1],
+    [1, 0, 1, 1, 1, 0, 3, 1, 1, 1],
+    [1, 0, 0, 0, 0, 0, 1, 1, 1, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+]
+# Constants
+PATH=0
+WALL=1
+RIVER=2
+MATERIALS=3
+KEYS=4
+DOORS=5
+FINISH=6
+# Define global Variables
+Mats = 0
+Keys = 0
+
+# Define a function to print our Map and current Player location
