@@ -30,3 +30,16 @@ Mats = 0
 Keys = 0
 
 # Define a function to print our Map and current Player location
+def movePlayer(x, y, moveDir):
+    global Map, Mats, Keys
+    # Calculate the new coordinates based on the move direction
+    new_x = x
+    new_y = y
+    if moveDir == "u":
+        new_y = new_y - 1
+    elif moveDir == "d":
+        new_y = new_y + 1
+    elif moveDir == "l":
+        new_x = new_x - 1
+    elif moveDir == "r":
+        new_x = new_x + 1
