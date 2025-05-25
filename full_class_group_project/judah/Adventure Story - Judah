@@ -43,3 +43,41 @@ def movePlayer(x, y, moveDir):
         new_x = new_x - 1
     elif moveDir == "r":
         new_x = new_x + 1
+# Check if the new coordinates are within bounds and not a wall
+    if 0 <= new_x < len(Map[0]) and 0 <= new_y < len(Map) and Map[new_y][new_x] != 1 and Map[new_y][new_x] != 2 and Map[new_y][new_x] != 5:
+        return (new_x, new_y)
+    elif Map[new_y][new_x] != 1 and Map[new_y][new_x] != 5:
+        if Mats >= 1:
+            Buildit = input("This river is too dangerous to cross...Would you like to use your building materials? (y/n): ")
+            if Buildit.lower() == 'y':
+                # Update the map to indicate the presence of a bridge
+                Map[new_y][new_x] = 0
+                Mats = Mats - 1
+                print("You have", Mats, "building materials left")
+                return (new_x, new_y)
+            else:
+                print("You've decided to keep your building materials...")
+                return (x, y)
+        else:
+            print("This river is too dangerous to swim across. If only we had something to build over it with...")
+            return (x, y)
+    elif Map[new_y][new_x] == 5:  # If the player encounters a door
+        if Keys >= 1:
+            Unlock = input("Would you like to unlock this door? (y/n): ")
+            if Unlock.lower() == 'y':  # Check if the player wants to unlock the door
+                Map[new_y][new_x] = 0  
+                Keys= Keys - 1  
+                print("You unlocked the door! You have", Keys, "keys left.")
+                return (new_x, new_y)  # Move the player through the door
+            else:
+                print("You chose not to unlock this door")
+                return (x, y)  # Player stays at the same position
+        else:
+            print("Did you just walk face first into a door? Nevermind...I'll pretend I didn't see that")
+            return (x, y)  # Player stays at the same position
+            
+    else:
+        print("**Invalid move** Try again.")
+        return (x, y)
+
+
