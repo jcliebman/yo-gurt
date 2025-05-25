@@ -1,26 +1,46 @@
-###JUDAH###
-## Define a map and let the player move around it
-# Define our map: 1 = wall, 0 = path
-# 0,0 is the top left of the map, therefore...
-# moving up decreases the y location and
-# moving left decreases the x location and vice versa
+import turtle
+from turtle import *
 
-###
-##IMPORTANT: THIS GAME WAS MADE IN THE FONT "AVENIR" YOU MUST HAVE THE SAME FONT ALONG WITH SIZE 13 FOR IT TO WORK
-###
+# Constants for map elements
+PATH = 0
+WALL = 1
+RIVER = 2
+MATERIALS = 3
+KEYS = 4
+DOORS = 5
+FINISH = 6
+BM_count=0
+# Create the turtles
+t = turtle.Turtle()  # Map draw turtle
+t.hideturtle()
+p = turtle.Turtle()  # Player move turtle
+c = turtle.Turtle()
+t.speed(0)  # Set the speed
+p.speed(0)
+screen= Screen()
+screen.setup(750, 950)
 
+# Map data
 Map = [
-    [1, 1, 1, 1, 1, 1, 1, 1, 6, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1, 5, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1, 2, 1],
-    [1, 1, 1, 1, 1, 0, 0, 1, 2, 1],
-    [1, 1, 1, 1, 1, 0, 0, 3, 2, 1],
-    [1, 3, 1, 1, 1, 3, 1, 1, 1, 1],
-    [1, 0, 1, 3, 0, 0, 2, 2, 4, 1],
-    [1, 0, 1, 1, 1, 0, 3, 1, 1, 1],
-    [1, 0, 0, 0, 0, 0, 1, 1, 1, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    [1, 1, 1, 1, 1, 1, 1, 1, 6, 1, 1, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 5, 1, 1, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1],
+    [1, 1, 1, 1, 1, 0, 0, 1, 2, 1, 1, 1],
+    [1, 1, 1, 1, 1, 0, 0, 0, 2, 1, 1, 1],
+    [1, 3, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1],
+    [1, 0, 1, 3, 0, 0, 2, 2, 4, 1, 1, 1],
+    [1, 0, 1, 1, 1, 0, 3, 1, 1, 1, 1, 1],
+    [1, 0, 0, 0, 0, 2, 1, 1, 1, 1, 1, 1],
+    [1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1],
+    [1, 4, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1],
+    [1, 0, 3, 1, 1, 0, 1, 1, 1, 1, 1, 1],
+    [1, 0, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1],
+    [1, 3, 1, 1, 1, 0, 3, 0, 4, 0, 1, 1],
+    [1, 0, 5, 1, 0, 0, 1, 1, 1, 2, 1, 1],
+    [1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 3, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 ]
+
 # Constants
 PATH=0
 WALL=1
