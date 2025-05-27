@@ -41,19 +41,65 @@ Map = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 ]
 
-# Constants
-PATH=0
-WALL=1
-RIVER=2
-MATERIALS=3
-KEYS=4
-DOORS=5
-FINISH=6
-# Define global Variables
+# Start position of the turtles
+x_start = -150
+y_start = 150
+box_size = 30
+
+# Setup initial position for player
+player_start_x = 5
+player_start_y = 15
+
+#Write the controls
+def controls(t):
+    screen.tracer(0)
+    t.penup()
+    t.goto(-150, 180)
+    t.pendown()
+    t.write("Move with arrow keys, press 'q' to quit", move=False, align='left', font=('Arial', 20, "normal"))
+    t.hideturtle()
+    screen.update()
+    screen.tracer(1)
+    
+#Formula to used allow the turtle navigate the map while following the text layout
+def map_to_screen(x, y):
+    return x_start + x * box_size +13, y_start - y * box_size - 13 
+
+# Setup player's turtle
+p.penup()
+p.shape("turtle")
+player_x, player_y = map_to_screen(player_start_x, player_start_y)
+p.goto(player_x, player_y)
+
+# Initialize variables
 Mats = 0
 Keys = 0
 
-# Define a function to print our Map and current Player location
+
+def drawMap(currX, currY):
+    print()
+    for y in range(0, len(Map)):
+        for x in range(0, len(Map[y])):
+            # Show numbers as symbols
+            if currX == x and currY == y:
+                print("*  ", end="")
+            elif Map[y][x] == RIVER:  # River tile
+                print("~  ", end="")
+            elif Map[y][x] == MATERIALS:  # Item
+                print("?  ", end="")  # '?' means item
+            elif Map[y][x] == KEYS:
+                print("?  ", end="")  # Key
+            elif Map[y][x] == PATH:
+                print("   ", end="")  # path
+            elif Map[y][x] == DOORS:
+                print("D  ", end="")  # Door
+            elif Map[y][x] == FINISH:
+                print("F  ", end="")  # End
+            else:
+                print(Map[y][x], " ", end="")
+        print()
+    print()
+
 
 
 def drawMap(currX, currY):
