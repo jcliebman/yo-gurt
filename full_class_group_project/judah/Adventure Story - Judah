@@ -100,38 +100,7 @@ def drawMap(currX, currY):
         print()
     print()
 
-
-
-def drawMap(currX, currY):
-    print()
-    for y in range(0, len(Map)):
-        for x in range(0, len(Map[y])):
-            # Show numbers as symbols
-            if currX == x and currY == y:
-                print("*  ", end="")
-            elif Map[y][x] == RIVER:  # River tile
-                print("~  ", end="")
-            elif Map[y][x] == MATERIALS:  # Item
-                print("?  ", end="")  # '?' means item
-            elif Map[y][x] == KEYS:
-                print("?  ", end="")  # Key
-            elif Map[y][x] == PATH:
-                print("   ", end="")  # path
-            elif Map[y][x] == DOORS:
-                print("D  ", end="")  # Door
-            elif Map[y][x] == FINISH:
-                print("F  ", end="")  # End
-            else:
-                print(Map[y][x], " ", end="")
-        print()
-    print()
-
-
 # Define our function that will move the player
-# The function will first check if the player can move or hits a wall
-# If the player can move, then the current location will be updated
-# If the player cannot move due to a wall, the location will not be updated
-
 def movePlayer(x, y, moveDir):
     global Map, Mats, Keys
     # Calculate the new coordinates based on the move direction
@@ -148,64 +117,55 @@ def movePlayer(x, y, moveDir):
     # Check if the new coordinates are within bounds and not a wall
     if 0 <= new_x < len(Map[0]) and 0 <= new_y < len(Map) and Map[new_y][new_x] != 1 and Map[new_y][new_x] != 2 and Map[new_y][new_x] != 5:
         return (new_x, new_y)
-    elif Map[new_y][new_x] != 1 and Map[new_y][new_x] != 5:
+    elif Map[new_y][new_x] == RIVER:
         if Mats >= 1:
-            Buildit = input("This river is too dangerous to cross...Would you like to use your building materials? (y/n): ")
+            Buildit = turtle.textinput("River!","This river is too dangerous to cross...Would you like to use your building materials? (y/n): ")
             if Buildit.lower() == 'y':
-                # Update the map to indicate the presence of a bridge
                 Map[new_y][new_x] = 0
-                Mats = Mats - 1
+                Mats -= 1
                 print("You have", Mats, "building materials left")
+                print(" ")
+                t.clear()
+                draw_map(Map, x_start, y_start, box_size)
+                listen()
                 return (new_x, new_y)
+                
             else:
                 print("You've decided to keep your building materials...")
+                print(" ")
+                listen()
                 return (x, y)
         else:
             print("This river is too dangerous to swim across. If only we had something to build over it with...")
+            print(" ")
             return (x, y)
-    elif Map[new_y][new_x] == 5:  # If the player encounters a door
+    elif Map[new_y][new_x] == DOORS:
         if Keys >= 1:
-            Unlock = input("Would you like to unlock this door? (y/n): ")
-            if Unlock.lower() == 'y':  # Check if the player wants to unlock the door
-                Map[new_y][new_x] = 0  
-                Keys= Keys - 1  
+            Unlock = turtle.textinput("Did you just walk face first into a door", "Unlock it? (y/n): ")
+            if Unlock.lower() == 'y':
+                Map[new_y][new_x] = 0
+                Keys= Keys - 1
                 print("You unlocked the door! You have", Keys, "keys left.")
-                return (new_x, new_y)  # Move the player through the door
+                print(" ")
+                t.clear()
+                draw_map(Map, x_start, y_start, box_size)
+                listen()
+                return (new_x, new_y)
             else:
                 print("You chose not to unlock this door")
-                return (x, y)  # Player stays at the same position
+                print(" ")
+                listen
+                return (x, y)
         else:
             print("Did you just walk face first into a door? Nevermind...I'll pretend I didn't see that")
-            return (x, y)  # Player stays at the same position
-            
+            print(" ")
+            return (x, y)
     else:
         print("**Invalid move** Try again.")
+        print(" ")
         return (x, y)
 
 
-
-## Item pick up
-def item_grab(x, y):
-    global Mats, Keys
-    if Map[y][x] == 3:
-        decision = input("You found building materials! Pick them up? (y/n): ")
-        if decision.lower() == 'y':
-            Mats = Mats + 1
-            print("You picked up the building materials!")
-            print("You currently have", Mats, "building materials")
-            # Now remove the item from the map
-            Map[y][x] = 0
-        else:
-            print("You decided not to pick up the building materials.")
-            print("You currently have", Mats, "building materials.")
-
-    if Map[y][x] == 4:
-        key_pickup = input("You Found a Key! Perhaps it opens a door somewhere... Pick it up? (y/n): ")
-        if key_pickup.lower() == 'y':
-            Keys = Keys + 1
-            print("You've picked up a key!")
-            print("You have", Keys, "Keys...")
-            Map[y][x] = 0
 
 #END OF GAME
 def GAME_END(x,y):
