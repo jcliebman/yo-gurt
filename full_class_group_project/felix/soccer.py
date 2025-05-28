@@ -52,13 +52,13 @@ class Player():
 
 class HeavyPlayer(Player):
     def __init__(self,pname, num):
-        super().__init__(strength = 100, dribbling=87, shooting = 85, shotpower=100, speed = 7, pname = pname, num=num)
+        super().__init__(strength = 100, dribbling=87, shooting = 85, shotpower=100, speed = 6.5, pname = pname, num=num)
         turtle.addshape(name = 'heavy.gif', shape = None)
         self.player.shape("heavy.gif")
         self.player.goto(self.cor)
 class LightPlayer(Player):
     def __init__(self,pname, num):
-        super().__init__(strength = 55, dribbling=95, shooting = 90, shotpower=75, speed = 9, pname = pname, num = num)
+        super().__init__(strength = 55, dribbling=95, shooting = 90, shotpower=75, speed = 10, pname = pname, num = num)
         turtle.addshape(name = 'light.gif', shape = None)
         self.player.shape("light.gif")
         self.player.goto(self.cor)
@@ -93,7 +93,7 @@ class Ball():
             dx = offset * math.cos(rad)
             dy = offset * math.sin(rad)
             ball.goto(winner.player.xcor() + dx, winner.player.ycor() + dy - 30)
-    def check_goal(self,ball,players):
+    def check_goal(self,ball,players, writers):
         if self.carrier:
             if (math.dist((ball.xcor(), 0), (self.carrier.goalx, 0)) <= 5) and (50>ball.ycor()>-50):
                 self.goal = True
@@ -104,13 +104,39 @@ class Ball():
                 msg.pu()
                 msg.goto(0,110)
                 msg.write(prompt, align = "center", font = ("Roboto", 70, "bold"))
-                #call scoreboard here
+                write_score(writers[self.carrier.num-1], self.carrier)
                 time.sleep(2)
                 msg.clear()
                 ball.goto(0,0)
                 for player in players:
                     player.player.goto(player.cor)
+def sb(): #background for scoreboard
+    sbs = [Turtle(), Turtle()]
+    for sb in sbs:
+        sb.pu()
+        sb.shape('square')
+        sb.shapesize(2, 20, 0)
+    sbs[0].goto(-200, 290)
+    sbs[0].color("Red")
+    sbs[1].goto(200,290)
+    sbs[1].color("Blue")
+    for sb in sbs:
+        sb.stamp()
+        sb.hideturtle()
 
+def write_score(writer, player):
+    writer.clear()
+    writer.write(f"{player.pname}: {player.score}", align = "center", font = ("Roboto", 40, "bold"))
+def stands():
+    stands = [Turtle(), Turtle()]
+    for stand in stands:
+        stand.pu()
+        stand.shape('square')
+        stand.shapesize(2, 20, 0)
+    stands[0].goto(200, -290)
+    stands[0].color("Red")
+    stands[1].goto(-200,-290)
+    stands[1].color("Blue")
 def playercreate():
     players = []
     for num in range(0,2):
@@ -140,6 +166,9 @@ screen = Screen()
 turtle.setup(800,620)
 screen.bgpic(picname='field.gif')
 screen.tracer(0)
+sb()
+stands()
+screen.update()
 players = playercreate()
 ball = Turtle()
 turtle.addshape(name = 'ball.gif', shape = None)
@@ -147,12 +176,25 @@ ball.shape("ball.gif")
 ball.pu()
 ball.goto(0, 0)
 b = Ball()
+cor = 200
+p = 0
+writers = [Turtle(), Turtle()]
+for writer in writers:
+    writer.pu()
+    writer.hideturtle()
+    writer.shapesize(1,1,100)
+    writer.goto(cor, 265)
+    cor-=400
+    write_score(writer, players[p])
+    p+=1
 
 # Main Loop
 while True:
     turtle.listen()
     for player in players:
         player.move()
+        # for writer in writers:
+        #     write_score(writer, player)
     b.dribble(ball,players)
-    b.check_goal(ball, players)
+    b.check_goal(ball, players, writers)
     screen.update()
