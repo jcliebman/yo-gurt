@@ -258,7 +258,7 @@ def item_grab(x, y):
         
     elif Map[y][x] == MATERIALS and BM_count>=4:
         BM_count=0
-        decision2 = turtle.textinput("For Real?", "Pick that shit up? 'y'/'n'")
+        decision2 = turtle.textinput("For Real?", "Pick it up? 'y'/'n'")
         if decision2 == "y":
             Mats= Mats + 1
             print("You picked up the building materials!")
