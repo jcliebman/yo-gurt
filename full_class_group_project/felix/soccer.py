@@ -3,6 +3,9 @@ from turtle import *
 import math
 import random
 import time
+
+#main player class with the information all players need
+#handles movements and shooting
 class Player():
     def __init__(self, strength, dribbling, shooting, shotpower, speed, pname, num):
         self.strength = strength
@@ -50,49 +53,56 @@ class Player():
     def reset(self):
         self.player.goto(self.cor)
 
+#heavy player class gives the stats for a heavy player
 class HeavyPlayer(Player):
     def __init__(self,pname, num):
         super().__init__(strength = 100, dribbling=87, shooting = 85, shotpower=100, speed = 6.5, pname = pname, num=num)
         turtle.addshape(name = 'heavy.gif', shape = None)
         self.player.shape("heavy.gif")
-        self.player.goto(self.cor)
+        self.reset()
+
+#light player class gives the stats for a light player
 class LightPlayer(Player):
     def __init__(self,pname, num):
         super().__init__(strength = 55, dribbling=95, shooting = 90, shotpower=75, speed = 10, pname = pname, num = num)
         turtle.addshape(name = 'light.gif', shape = None)
         self.player.shape("light.gif")
-        self.player.goto(self.cor)
+        self.reset()
+
+#normal player has average stats, but has the advantage of no big weaknesses
 class NormalPlayer(Player):
     def __init__(self,pname,num):
         super().__init__(strength = 70, dribbling=91, shooting = 80, shotpower=85, speed = 8, pname = pname, num = num)
         turtle.addshape(name = 'player.gif', shape = None)
         self.player.shape("player.gif")
-        self.player.goto(self.cor)
+        self.reset()
 
+#ball class handles everything that happens with the ball besides shooting
 class Ball():
     def __init__(self):
         self.carrier = None
         self.goal = False
 
-    def dribble(self, ball, players):
+    def dribble(self, ball, players): #dribbling the ball takes into account the strength and loc of players
         nearby_players = []
 
         for player in players:
             distance = math.dist((player.player.xcor(), player.player.ycor()), (ball.xcor(), ball.ycor()))
             distance2 = math.dist((player.player.xcor(), player.player.ycor()-30), (ball.xcor(), ball.ycor()))
-            if distance < 31 or distance2 < 31:
+            if distance < 31 or distance2 < 31: #two distances to cover more of the player
                 nearby_players.append(player)
 
         if nearby_players: 
             strengths = [p.strength for p in nearby_players] 
-            winner = random.choices(nearby_players, weights=strengths, k=1)[0]
+            winner = random.choices(nearby_players, weights=strengths, k=1)[0] #use strength to weight random choice
             self.carrier = winner
             ball.setheading(winner.player.heading())
-            offset = 115 - winner.dribbling
+            offset = 115 - winner.dribbling #better dribbling stat means ball stays closer
             rad = math.radians(winner.player.heading())
             dx = offset * math.cos(rad)
             dy = offset * math.sin(rad)
-            ball.goto(winner.player.xcor() + dx, winner.player.ycor() + dy - 30)
+            ball.goto(winner.player.xcor() + dx, winner.player.ycor() + dy - 30)#place ball lower on the player
+    #check is a goal has been scored
     def check_goal(self,ball,players, writers):
         if self.carrier:
             if (math.dist((ball.xcor(), 0), (self.carrier.goalx, 0)) <= 5) and (50>ball.ycor()>-50):
@@ -109,7 +119,8 @@ class Ball():
                 msg.clear()
                 ball.goto(0,0)
                 for player in players:
-                    player.player.goto(player.cor)
+                    player.reset()
+
 def sb(): #background for scoreboard
     sbs = [Turtle(), Turtle()]
     for sb in sbs:
@@ -127,7 +138,8 @@ def sb(): #background for scoreboard
 def write_score(writer, player):
     writer.clear()
     writer.write(f"{player.pname}: {player.score}", align = "center", font = ("Roboto", 40, "bold"))
-def stands():
+
+def stands():#create the stands
     stands = [Turtle(), Turtle()]
     for stand in stands:
         stand.pu()
@@ -137,6 +149,8 @@ def stands():
     stands[0].color("Red")
     stands[1].goto(-200,-290)
     stands[1].color("Blue")
+
+#create the player, take user input for name and player type
 def playercreate():
     players = []
     for num in range(0,2):
@@ -159,6 +173,16 @@ def playercreate():
                 continue
         players.append(p)
     return players
+
+#create a countdown timer to end the game after a given amount of time in seconds
+def countdown(time_left):
+    global match_over
+    timer_writer.clear()
+    timer_writer.write(f"{time_left}", align="center", font=("Arial", 40,"bold"))
+    if time_left > 0:
+        screen.ontimer(lambda: countdown(time_left-1), 1000) #ontimer doesn't want a func with a parameter, so lambda gets around that
+    else:
+        match_over= True
 
 # Game Setup
 TK_SILENCE_DEPRECATION=1 
@@ -187,14 +211,24 @@ for writer in writers:
     cor-=400
     write_score(writer, players[p])
     p+=1
+match_over = False
+timer_writer = Turtle()
+timer_writer.hideturtle()
+timer_writer.pu()
+timer_writer.goto(0, 265) 
 
+countdown(20) # countdown timer that determines the length of the game
 # Main Loop
 while True:
-    turtle.listen()
-    for player in players:
-        player.move()
-        # for writer in writers:
-        #     write_score(writer, player)
-    b.dribble(ball,players)
-    b.check_goal(ball, players, writers)
-    screen.update()
+    if not match_over:
+        turtle.listen()
+        for player in players:
+            player.move()
+            # for writer in writers:
+            #     write_score(writer, player)
+        b.dribble(ball,players)
+        b.check_goal(ball, players, writers)
+        screen.update()
+    else:
+        time.sleep(5)
+        exit()
