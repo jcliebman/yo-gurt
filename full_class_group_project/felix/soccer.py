@@ -70,7 +70,7 @@ class Player():
 #heavy player class gives the stats for a heavy player
 class HeavyPlayer(Player):
     def __init__(self,pname, num, color):
-        super().__init__(strength = 100, dribbling=80, shotpower=100, speed = 10, pname = pname, num=num, color = color)
+        super().__init__(strength = 100, dribbling=80, shotpower=100, speed = 13, pname = pname, num=num, color = color)
         turtle.addshape(name = 'heavy.gif', shape = None)
         self.player.shape("heavy.gif")
         self.reset()
@@ -78,7 +78,7 @@ class HeavyPlayer(Player):
 #light player class gives the stats for a light player
 class LightPlayer(Player):
     def __init__(self,pname, num, color):
-        super().__init__(strength = 55, dribbling=95, shotpower=75, speed = 17, pname = pname, num = num, color=color)
+        super().__init__(strength = 55, dribbling=95, shotpower=75, speed = 20, pname = pname, num = num, color=color)
         turtle.addshape(name = 'light.gif', shape = None)
         self.player.shape("light.gif")
         self.reset()
@@ -86,7 +86,7 @@ class LightPlayer(Player):
 #normal player has average stats, but has the advantage of no big weaknesses
 class NormalPlayer(Player):
     def __init__(self,pname,num, color):
-        super().__init__(strength = 70, dribbling=91, shotpower=85, speed = 13, pname = pname, num = num, color=color)
+        super().__init__(strength = 70, dribbling=91, shotpower=85, speed = 16, pname = pname, num = num, color=color)
         turtle.addshape(name = 'player.gif', shape = None)
         self.player.shape("player.gif")
         self.reset()
@@ -180,6 +180,7 @@ class Ball():
                 self.shooter = None
     def outofbounds(self,ball,players):
         if abs(ball.ycor())>=265 or abs(ball.xcor())>=370:
+            time.sleep(1.5)
             self.ob = True
             ball.goto(0,0)
             for player in players:
@@ -260,8 +261,10 @@ def playercreate():
 #create a countdown timer to end the game after a given amount of time in seconds
 def countdown(time_left):
     global match_over
+    minutes = time_left//60
+    seconds = time_left%60
     timer_writer.clear()
-    timer_writer.write(f"{time_left}", align="center", font=("Arial", 40,"bold"))
+    timer_writer.write(f"{minutes}:{seconds:02}", align="center", font=("Arial", 35,"bold"))
     if time_left > 0:
         screen.ontimer(lambda: countdown(time_left-1), 1000) #ontimer doesn't want a func with a parameter, so lambda gets around that
     else:
@@ -298,9 +301,17 @@ match_over = False
 timer_writer = Turtle()
 timer_writer.hideturtle()
 timer_writer.pu()
-timer_writer.goto(0, 265) 
+timer_writer.goto(0, 270) 
+timer_box = Turtle()
+timer_box.hideturtle()
+timer_box.penup()
+timer_box.shape('square')
+timer_box.color('white')
+timer_box.shapesize(stretch_wid=2, stretch_len=4)
+timer_box.goto(0, 290)
+timer_box.stamp()
 
-countdown(1000) # countdown timer that determines the length of the game
+countdown(90) # countdown timer that determines the length of the game
 # Main Loop
 while True:
     if not match_over:
