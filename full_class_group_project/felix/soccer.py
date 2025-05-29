@@ -7,7 +7,7 @@ import time
 #main player class with the information all players need
 #handles movements and shooting condition
 class Player():
-    def __init__(self, strength, dribbling, shotpower, speed, pname, num):
+    def __init__(self, strength, dribbling, shotpower, speed, pname, num,color):
         self.strength = strength
         self.dribbling = dribbling
         self.shotpower =shotpower
@@ -22,11 +22,17 @@ class Player():
         self.cor = (120,0)
         self.score = 0
         self.shooting = False
+        self.id = Turtle()
+        self.id.color(color)
+        self.id.pu()
+        self.id.setheading(270)
         if self.num ==2:
             self.player.setheading(0)
             self.heading = 0
             self.goalx = 360
             self.cor = (-120,0)
+    def id_track(self):
+        self.id.goto(self.player.xcor(), self.player.ycor()+50)
     def forward(self):
         self.player.setheading(self.heading)
         self.player.forward(self.speed)
@@ -55,6 +61,7 @@ class Player():
             turtle.onkey(self.up, "w")
             turtle.onkey(self.down, "s")
             turtle.onkey(self.shoot, "space")
+        self.id_track()
     def reset(self):
         self.player.goto(self.cor)
         self.player.setheading(self.heading)
@@ -62,24 +69,24 @@ class Player():
 
 #heavy player class gives the stats for a heavy player
 class HeavyPlayer(Player):
-    def __init__(self,pname, num):
-        super().__init__(strength = 100, dribbling=80, shotpower=100, speed = 10, pname = pname, num=num)
+    def __init__(self,pname, num, color):
+        super().__init__(strength = 100, dribbling=80, shotpower=100, speed = 10, pname = pname, num=num, color = color)
         turtle.addshape(name = 'heavy.gif', shape = None)
         self.player.shape("heavy.gif")
         self.reset()
 
 #light player class gives the stats for a light player
 class LightPlayer(Player):
-    def __init__(self,pname, num):
-        super().__init__(strength = 55, dribbling=95, shotpower=75, speed = 17, pname = pname, num = num)
+    def __init__(self,pname, num, color):
+        super().__init__(strength = 55, dribbling=95, shotpower=75, speed = 17, pname = pname, num = num, color=color)
         turtle.addshape(name = 'light.gif', shape = None)
         self.player.shape("light.gif")
         self.reset()
 
 #normal player has average stats, but has the advantage of no big weaknesses
 class NormalPlayer(Player):
-    def __init__(self,pname,num):
-        super().__init__(strength = 70, dribbling=91, shotpower=85, speed = 13, pname = pname, num = num)
+    def __init__(self,pname,num, color):
+        super().__init__(strength = 70, dribbling=91, shotpower=85, speed = 13, pname = pname, num = num, color=color)
         turtle.addshape(name = 'player.gif', shape = None)
         self.player.shape("player.gif")
         self.reset()
@@ -227,6 +234,7 @@ def stands():#create the stands
 
 #create the player, take user input for name and player type
 def playercreate():
+    colors = ["Blue","Red"]
     players = []
     for num in range(0,2):
         while True:
@@ -234,13 +242,13 @@ def playercreate():
             name = screen.textinput(f"Player {num+1}", "Type your name")
             try:
                 if int(type) == 1:
-                    p = HeavyPlayer(name, num+1)
+                    p = HeavyPlayer(name, num+1, colors[num])
                     break
                 if int(type) == 2:
-                    p = LightPlayer(name, num+1)
+                    p = LightPlayer(name, num+1, colors[num])
                     break
                 if int(type) == 3:
-                    p = NormalPlayer(name, num+1)
+                    p = NormalPlayer(name, num+1, colors[num])
                     break
                 else:
                     continue
