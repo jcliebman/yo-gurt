@@ -154,8 +154,8 @@ class Ball():
             msg = Turtle()
             msg.hideturtle()
             msg.pu()
-            msg.goto(0,110)
-            msg.write(prompt, align = "center", font = ("Roboto", 70, "bold"))
+            msg.goto(0,70)
+            msg.write(prompt, align = "center", font = ("Press Start 2P", 60, "bold"))
             write_score(writers[self.scorer.num-1], self.scorer)
             time.sleep(2)
             msg.clear()
@@ -217,7 +217,7 @@ def sb(): #background for scoreboard
 
 def write_score(writer, player):
     writer.clear()
-    writer.write(f"{player.pname}: {player.score}", align = "center", font = ("Roboto", 40, "bold"))
+    writer.write(f"{player.pname}: {player.score}", align = "center", font = ("Press Start 2P", 27, "bold"))
 
 def stands():#create the stands
     stands = [Turtle(), Turtle()]
@@ -264,12 +264,29 @@ def countdown(time_left):
     minutes = time_left//60
     seconds = time_left%60
     timer_writer.clear()
-    timer_writer.write(f"{minutes}:{seconds:02}", align="center", font=("Arial", 35,"bold"))
+    timer_writer.write(f"{minutes}:{seconds:02}", align="center", font=("Press Start 2P", 22,"bold"))
     if time_left > 0:
         screen.ontimer(lambda: countdown(time_left-1), 1000) #ontimer doesn't want a func with a parameter, so lambda gets around that
     else:
         match_over= True
-
+        timer_writer.goto(0,-60)
+        timer_writer.write(f"{minutes}:{seconds:02}", align="center", font=("Press Start 2P", 115,"bold"))
+        time.sleep(1.5)
+        timer_writer.clear()
+        timer_writer.write("GAME OVER", align="center", font=("Press Start 2P",80,"bold"))
+        time.sleep(1.5)
+def gameover(players):
+    timer_writer.clear()
+    writer = Turtle()
+    writer.pu()
+    writer.goto(0,-40)
+    win = max(players[0].score, players[1].score)
+    if players[0].score == players[1].score:
+        writer.write("TIE GAME", align="center", font=("Press Start 2P",90,"bold"))
+    else:
+        for player in players:
+            if player.score == win:
+                writer.write(f"{player.pname} Wins!", align="center", font=("Press Start 2P",80,"bold"))
 # Game Setup
 TK_SILENCE_DEPRECATION=1 
 screen = Screen()
@@ -293,7 +310,7 @@ for writer in writers:
     writer.pu()
     writer.hideturtle()
     writer.shapesize(1,1,100)
-    writer.goto(cor, 265)
+    writer.goto(cor, 275)
     cor-=400
     write_score(writer, players[p])
     p+=1
@@ -301,17 +318,17 @@ match_over = False
 timer_writer = Turtle()
 timer_writer.hideturtle()
 timer_writer.pu()
-timer_writer.goto(0, 270) 
+timer_writer.goto(0, 276) 
 timer_box = Turtle()
 timer_box.hideturtle()
 timer_box.penup()
 timer_box.shape('square')
 timer_box.color('white')
-timer_box.shapesize(stretch_wid=2, stretch_len=4)
-timer_box.goto(0, 290)
+timer_box.shapesize(stretch_wid=2, stretch_len=5)
+timer_box.goto(-3, 290)
 timer_box.stamp()
 
-countdown(90) # countdown timer that determines the length of the game
+countdown(25) # countdown timer that determines the length of the game
 # Main Loop
 while True:
     if not match_over:
@@ -327,5 +344,6 @@ while True:
             b.outofbounds(ball, players)
         screen.update()
     else:
+        gameover(players)
         time.sleep(5)
         exit()
