@@ -328,7 +328,7 @@ timer_box.shapesize(stretch_wid=2, stretch_len=5)
 timer_box.goto(-3, 290)
 timer_box.stamp()
 
-countdown(25) # countdown timer that determines the length of the game
+countdown(90) # countdown timer that determines the length of the game
 # Main Loop
 while True:
     if not match_over:
