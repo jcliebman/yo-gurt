@@ -16,16 +16,17 @@ class Player():
         self.player = Turtle()
         self.player.pu()
         self.num = num
-        self.heading = 0
+        self.heading = 180
+        self.player.setheading(180)
         self.goalx =-360
-        self.cor = (100,0)
+        self.cor = (120,0)
         self.score = 0
         self.shooting = False
         if self.num ==2:
-            self.player.setheading(180)
-            self.heading = 180
+            self.player.setheading(0)
+            self.heading = 0
             self.goalx = 360
-            self.cor = (-100,0)
+            self.cor = (-120,0)
     def forward(self):
         self.player.setheading(self.heading)
         self.player.forward(self.speed)
@@ -42,25 +43,27 @@ class Player():
         self.shooting = True
     def move(self):
         if self.num == 1:
-            turtle.onkey(self.forward, "Right")
-            turtle.onkey(self.backward, "Left")
+            turtle.onkey(self.forward, "Left")
+            turtle.onkey(self.backward, "Right")
             turtle.onkey(self.up, "Up")
             turtle.onkey(self.down, "Down")
             turtle.onkey(self.shoot, "/")
 
         else:
-            turtle.onkey(self.forward, "a")
-            turtle.onkey(self.backward, "d")
+            turtle.onkey(self.forward, "d")
+            turtle.onkey(self.backward, "a")
             turtle.onkey(self.up, "w")
             turtle.onkey(self.down, "s")
-            turtle.onkey(self.shoot, "c")
+            turtle.onkey(self.shoot, "space")
     def reset(self):
         self.player.goto(self.cor)
+        self.player.setheading(self.heading)
+        self.fo = False
 
 #heavy player class gives the stats for a heavy player
 class HeavyPlayer(Player):
     def __init__(self,pname, num):
-        super().__init__(strength = 100, dribbling=87, shotpower=100, speed = 6.5, pname = pname, num=num)
+        super().__init__(strength = 100, dribbling=80, shotpower=100, speed = 10, pname = pname, num=num)
         turtle.addshape(name = 'heavy.gif', shape = None)
         self.player.shape("heavy.gif")
         self.reset()
@@ -68,7 +71,7 @@ class HeavyPlayer(Player):
 #light player class gives the stats for a light player
 class LightPlayer(Player):
     def __init__(self,pname, num):
-        super().__init__(strength = 55, dribbling=95, shotpower=75, speed = 10, pname = pname, num = num)
+        super().__init__(strength = 55, dribbling=95, shotpower=75, speed = 17, pname = pname, num = num)
         turtle.addshape(name = 'light.gif', shape = None)
         self.player.shape("light.gif")
         self.reset()
@@ -76,7 +79,7 @@ class LightPlayer(Player):
 #normal player has average stats, but has the advantage of no big weaknesses
 class NormalPlayer(Player):
     def __init__(self,pname,num):
-        super().__init__(strength = 70, dribbling=91, shotpower=85, speed = 8, pname = pname, num = num)
+        super().__init__(strength = 70, dribbling=91, shotpower=85, speed = 13, pname = pname, num = num)
         turtle.addshape(name = 'player.gif', shape = None)
         self.player.shape("player.gif")
         self.reset()
@@ -89,6 +92,7 @@ class Ball():
         self.shot_count = 0
         self.shooter=None
         self.scorer = None
+        self.ob = False
 
     def dribble(self, ball, players): #dribbling the ball takes into account the strength and loc of players
         nearby_players = []
@@ -104,7 +108,7 @@ class Ball():
             winner = random.choices(nearby_players, weights=strengths, k=1)[0] #use strength to weight random choice
             self.carrier = winner
             ball.setheading(winner.player.heading())
-            offset = 115 - winner.dribbling #better dribbling stat means ball stays closer
+            offset = 105 - winner.dribbling #better dribbling stat means ball stays closer
             rad = math.radians(winner.player.heading())
             dx = offset * math.cos(rad)
             dy = offset * math.sin(rad)
@@ -117,20 +121,24 @@ class Ball():
             if self.carrier.num ==1:
                 if (self.carrier.goalx>= ball.xcor()) and (60>ball.ycor()>-60):
                     self.goal = True
-                    self.scorer= self.shooter
+                    self.scorer= self.carrier
+                    self.carrier = None
             else:
                 if (self.carrier.goalx<= ball.xcor()) and (60>ball.ycor()>-60):
                     self.goal = True
-                    self.scorer = self.shooter
+                    self.scorer = self.carrier
+                    self.carrier = None
         if self.shooter:
             if self.shooter.num ==1:
                 if (self.shooter.goalx>= ball.xcor()) and (60>ball.ycor()>-60):
                     self.goal = True
                     self.scorer = self.shooter
+                    self.shooter = None
             else:
                 if (self.shooter.goalx<= ball.xcor()) and (60>ball.ycor()>-60):
                     self.goal = True
                     self.scorer = self.shooter
+                    self.shooter = None
         if self.goal:
             self.goal = False
             self.scorer.score+=1
@@ -152,7 +160,7 @@ class Ball():
     def shoot(self, ball):
         if self.carrier:
             if self.carrier.shooting and self.shot_count<self.carrier.shotpower//2:
-                ball.forward(self.carrier.shotpower//12)
+                ball.forward(35)
                 self.shot_count+=1
                 self.shooter = self.carrier
         if self.shooter:
@@ -163,6 +171,26 @@ class Ball():
                 self.shooter.shooting = False
                 self.shot_count = 0
                 self.shooter = None
+    def outofbounds(self,ball,players):
+        if abs(ball.ycor())>=265 or abs(ball.xcor())>=370:
+            self.ob = True
+            ball.goto(0,0)
+            for player in players:
+                player.shooting = False
+                if self.carrier:
+                    if player.num!=self.carrier.num:
+                        player.player.goto(0,0)
+                        player.player.setheading(player.heading)
+                    else:
+                        player.reset()
+                if self.shooter:
+                    if player.num!=self.shooter.num:
+                        player.player.goto(0,0)
+                        player.player.setheading(player.heading)
+                    else:
+                        player.reset()
+            self.ob = False
+
                 
 
 def sb(): #background for scoreboard
@@ -273,9 +301,11 @@ while True:
             player.move()
             # for writer in writers:
             #     write_score(writer, player)
-        b.dribble(ball,players)
-        b.check_goal(ball, players, writers)
-        b.shoot(ball)
+        if not b.ob:
+            b.dribble(ball,players)
+            b.check_goal(ball, players, writers)
+            b.shoot(ball)
+            b.outofbounds(ball, players)
         screen.update()
     else:
         time.sleep(5)
