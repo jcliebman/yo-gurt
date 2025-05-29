@@ -22,16 +22,16 @@ class Player():
         self.cor = (120,0)
         self.score = 0
         self.shooting = False
-        self.id = Turtle()
+        self.id = Turtle() #this id changes color based on player number
         self.id.color(color)
         self.id.pu()
         self.id.setheading(270)
-        if self.num ==2:
+        if self.num ==2: #set sp
             self.player.setheading(0)
             self.heading = 0
             self.goalx = 360
             self.cor = (-120,0)
-    def id_track(self):
+    def id_track(self): #id follows player so they can be identified
         self.id.goto(self.player.xcor(), self.player.ycor()+50)
     def forward(self):
         self.player.setheading(self.heading)
@@ -47,7 +47,7 @@ class Player():
         self.player.forward(self.speed)
     def shoot(self):
         self.shooting = True
-    def move(self):
+    def move(self): #contol all movements
         if self.num == 1:
             turtle.onkey(self.forward, "Left")
             turtle.onkey(self.backward, "Right")
@@ -62,10 +62,9 @@ class Player():
             turtle.onkey(self.down, "s")
             turtle.onkey(self.shoot, "space")
         self.id_track()
-    def reset(self):
+    def reset(self): #reset players after goals and obs
         self.player.goto(self.cor)
         self.player.setheading(self.heading)
-        self.fo = False
 
 #heavy player class gives the stats for a heavy player
 class HeavyPlayer(Player):
@@ -123,6 +122,7 @@ class Ball():
         else:
             self.carrier = None
     #check is a goal has been scored
+    #check for both shooter and carrier so that goals will always be detected
     def check_goal(self,ball,players, writers):
         if self.carrier:
             if self.carrier.num ==1:
@@ -157,6 +157,7 @@ class Ball():
             msg.goto(0,70)
             msg.write(prompt, align = "center", font = ("Press Start 2P", 60, "bold"))
             write_score(writers[self.scorer.num-1], self.scorer)
+            screen.update()
             time.sleep(2)
             msg.clear()
             ball.goto(0,0)
@@ -178,8 +179,10 @@ class Ball():
                 self.shooter.shooting = False
                 self.shot_count = 0
                 self.shooter = None
-    def outofbounds(self,ball,players):
+    #similar logic to check goal
+    def outofbounds(self,ball,players):#player who did not send ball out gets ball at half line
         if abs(ball.ycor())>=265 or abs(ball.xcor())>=370:
+            screen.update()
             time.sleep(1.5)
             self.ob = True
             ball.goto(0,0)
@@ -199,8 +202,6 @@ class Ball():
                         player.reset()
             self.ob = False
 
-                
-
 def sb(): #background for scoreboard
     sbs = [Turtle(), Turtle()]
     for sb in sbs:
@@ -215,7 +216,7 @@ def sb(): #background for scoreboard
         sb.stamp()
         sb.hideturtle()
 
-def write_score(writer, player):
+def write_score(writer, player): #write the score for both players
     writer.clear()
     writer.write(f"{player.pname}: {player.score}", align = "center", font = ("Press Start 2P", 27, "bold"))
 
@@ -275,7 +276,7 @@ def countdown(time_left):
         timer_writer.clear()
         timer_writer.write("GAME OVER", align="center", font=("Press Start 2P",80,"bold"))
         time.sleep(1.5)
-def gameover(players):
+def gameover(players): #when game ends, give game end message and say who won or tied
     timer_writer.clear()
     writer = Turtle()
     writer.pu()
@@ -286,7 +287,7 @@ def gameover(players):
     else:
         for player in players:
             if player.score == win:
-                writer.write(f"{player.pname} Wins!", align="center", font=("Press Start 2P",80,"bold"))
+                writer.write(f"{player.pname} Wins!", align="center", font=("Press Start 2P",70,"bold"))
 # Game Setup
 TK_SILENCE_DEPRECATION=1 
 screen = Screen()
@@ -306,7 +307,7 @@ b = Ball()
 cor = 200
 p = 0
 writers = [Turtle(), Turtle()]
-for writer in writers:
+for writer in writers: #initialize score writing
     writer.pu()
     writer.hideturtle()
     writer.shapesize(1,1,100)
@@ -315,11 +316,11 @@ for writer in writers:
     write_score(writer, players[p])
     p+=1
 match_over = False
-timer_writer = Turtle()
+timer_writer = Turtle() #initialize timer writing
 timer_writer.hideturtle()
 timer_writer.pu()
 timer_writer.goto(0, 276) 
-timer_box = Turtle()
+timer_box = Turtle() #initialize timer background
 timer_box.hideturtle()
 timer_box.penup()
 timer_box.shape('square')
@@ -343,7 +344,7 @@ while True:
             b.shoot(ball)
             b.outofbounds(ball, players)
         screen.update()
-    else:
+    else: #when the game ends this happens
         gameover(players)
         time.sleep(5)
         exit()
