@@ -47,3 +47,80 @@ player_frozen = False
 player_frozen_end = 0
 opponent_frozen = False
 opponent_frozen_end = 0
+
+
+# Ball stop timer
+ball_stopped = False
+ball_stop_timer = 0
+
+# Power-up linked list classes
+class PowerUpNode:
+    def __init__(self, powerup):
+        self.powerup = powerup
+        self.next = None
+
+class PowerUpList:
+    def __init__(self):
+        self.head = None
+
+    def add_powerup(self, powerup):
+        new_node = PowerUpNode(powerup)
+        if not self.head:
+            self.head = new_node
+        else:
+            current = self.head
+            while current.next:
+                current = current.next
+            current.next = new_node
+
+    def pop_first(self):
+        if not self.head:
+            return None
+        powerup = self.head.powerup
+        self.head = self.head.next
+        return powerup
+
+    def is_empty(self):
+        return self.head is None
+
+    def __str__(self):
+        result = []
+        current = self.head
+        while current:
+            result.append(current.powerup)
+            current = current.next
+        return " -> ".join(result) if result else "None"
+
+# Power-ups (linked lists)
+player_powerups = PowerUpList()
+opponent_powerups = PowerUpList()
+
+# Clock
+clock = pygame.time.Clock()
+
+def menu_loop(options):
+    index = 0
+    while True:
+        screen.fill(BLACK)
+        title = FONT.render("Select Option:", True, WHITE)
+        screen.blit(title, (WIDTH // 2 - title.get_width() // 2, 100))
+
+        for i, option in enumerate(options): 
+            color = WHITE if i == index else GRAY
+            text = FONT.render(option, True, color)
+            screen.blit(text, (WIDTH // 2 - text.get_width() // 2, 200 + i * 50))
+
+        pygame.display.flip()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    index = (index - 1) % len(options)
+                elif event.key == pygame.K_DOWN:
+                    index = (index + 1) % len(options)
+                elif event.key == pygame.K_RETURN:
+                    return options[index]
