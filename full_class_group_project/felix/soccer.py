@@ -67,6 +67,7 @@ class Player():
         self.player.goto(self.cor)
         self.player.setheading(self.heading)
         self.shooting = False
+        self.id_track()
 
 #heavy player class gives the stats for a heavy player
 class HeavyPlayer(Player):
@@ -149,9 +150,9 @@ class Ball():
                     self.scorer = self.shooter
                     self.shooter = None
         if self.goal:
+            unlisten()
             self.goal = False
             self.scorer.score+=1
-            self.scorer.shooting = False
             prompt = f"{self.scorer.pname} scored!"
             msg = Turtle()
             msg.hideturtle()
@@ -162,10 +163,18 @@ class Ball():
             screen.update()
             time.sleep(2)
             msg.clear()
-            ball.goto(0,0)
             for player in players:
-                player.reset()
-
+                if player.num!=self.scorer.num:
+                    player.shooting=False
+                    player.player.goto(0,0)
+                    player.id_track()
+                    player.player.setheading(player.heading)
+                else:
+                    player.reset()
+            ball.goto(0,0)
+            screen.update()
+            time.sleep(2)
+            self.scorer=None
     #shooting uses a bool from the player to tell when they should shoot
     def shoot(self, ball):
         if self.carrier:
@@ -186,25 +195,31 @@ class Ball():
     #similar logic to check goal
     def outofbounds(self,ball,players):#player who did not send ball out gets ball at half line
         if abs(ball.ycor())>=265 or abs(ball.xcor())>=370:
+            unlisten()
             screen.update()
             time.sleep(1.5)
             self.ob = True
-            ball.goto(0,0)
             for player in players:
-                player.shooting = False
                 if self.carrier:
                     if player.num!=self.carrier.num:
+                        player.shooting = False
                         player.player.goto(0,0)
+                        player.id_track()
                         player.player.setheading(player.heading)
                     else:
                         player.reset()
                 if self.shooter:
                     if player.num!=self.shooter.num:
+                        player.shooting = False
                         player.player.goto(0,0)
+                        player.id_track()
                         player.player.setheading(player.heading)
                     else:
                         player.reset()
+            ball.goto(0,0)
             self.ob = False
+            screen.update()
+            time.sleep(2)
 
 def sb(): #background for scoreboard
     sbs = [Turtle(), Turtle()]
@@ -292,6 +307,17 @@ def gameover(players): #when game ends, give game end message and say who won or
         for player in players:
             if player.score == win:
                 writer.write(f"{player.pname} Wins!", align="center", font=("Press Start 2P",70,"bold"))
+def unlisten(): #unbind all keys so you cannot move after a goal or out of bounds
+    turtle.onkey(None, "Left")
+    turtle.onkey(None, "Right")
+    turtle.onkey(None, "Up")
+    turtle.onkey(None, "Down")
+    turtle.onkey(None, "/")
+    turtle.onkey(None, "d")
+    turtle.onkey(None, "a")
+    turtle.onkey(None, "w")
+    turtle.onkey(None, "s")
+    turtle.onkey(None, "space")
 # Game Setup
 TK_SILENCE_DEPRECATION=1 
 screen = Screen()
@@ -336,19 +362,16 @@ timer_box.stamp()
 countdown(90) # countdown timer that determines the length of the game
 # Main Loop
 while True:
-    if not match_over:
+    if not match_over and not b.ob:
         turtle.listen()
         for player in players:
             player.move()
-            # for writer in writers:
-            #     write_score(writer, player)
-        if not b.ob:
-            b.dribble(ball,players)
-            b.check_goal(ball, players, writers)
-            b.shoot(ball)
-            b.outofbounds(ball, players)
+        b.dribble(ball,players)
+        b.check_goal(ball, players, writers)
+        b.shoot(ball)
+        b.outofbounds(ball, players)
         screen.update()
-    else: #when the game ends this happens
+    if match_over: #when the game ends this happens
         gameover(players)
         time.sleep(5)
         exit()
