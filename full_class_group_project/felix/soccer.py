@@ -7,7 +7,7 @@ import time
 #main player class with the information all players need
 #handles movements and shooting condition
 class Player():
-    def __init__(self, strength, dribbling, shotpower, speed, pname, num,color):
+    def __init__(self, strength, dribbling, shotpower, shotrange, speed, pname, num,color):
         self.strength = strength
         self.dribbling = dribbling
         self.shotpower =shotpower
@@ -26,6 +26,7 @@ class Player():
         self.id.color(color)
         self.id.pu()
         self.id.setheading(270)
+        self.shotrange = shotrange
         if self.num ==2: #set sp
             self.player.setheading(0)
             self.heading = 0
@@ -65,11 +66,12 @@ class Player():
     def reset(self): #reset players after goals and obs
         self.player.goto(self.cor)
         self.player.setheading(self.heading)
+        self.shooting = False
 
 #heavy player class gives the stats for a heavy player
 class HeavyPlayer(Player):
     def __init__(self,pname, num, color):
-        super().__init__(strength = 100, dribbling=80, shotpower=100, speed = 13, pname = pname, num=num, color = color)
+        super().__init__(strength = 100, dribbling=80, shotpower=100, shotrange = 5, speed = 13, pname = pname, num=num, color = color)
         turtle.addshape(name = 'heavy.gif', shape = None)
         self.player.shape("heavy.gif")
         self.reset()
@@ -77,7 +79,7 @@ class HeavyPlayer(Player):
 #light player class gives the stats for a light player
 class LightPlayer(Player):
     def __init__(self,pname, num, color):
-        super().__init__(strength = 55, dribbling=95, shotpower=75, speed = 20, pname = pname, num = num, color=color)
+        super().__init__(strength = 55, dribbling=95, shotpower=75, shotrange= 18, speed = 20, pname = pname, num = num, color=color)
         turtle.addshape(name = 'light.gif', shape = None)
         self.player.shape("light.gif")
         self.reset()
@@ -85,7 +87,7 @@ class LightPlayer(Player):
 #normal player has average stats, but has the advantage of no big weaknesses
 class NormalPlayer(Player):
     def __init__(self,pname,num, color):
-        super().__init__(strength = 70, dribbling=91, shotpower=85, speed = 16, pname = pname, num = num, color=color)
+        super().__init__(strength = 70, dribbling=91, shotpower=85, shotrange = 10, speed = 16, pname = pname, num = num, color=color)
         turtle.addshape(name = 'player.gif', shape = None)
         self.player.shape("player.gif")
         self.reset()
@@ -167,7 +169,9 @@ class Ball():
     #shooting uses a bool from the player to tell when they should shoot
     def shoot(self, ball):
         if self.carrier:
+            h = self.carrier.player.heading()
             if self.carrier.shooting and self.shot_count<self.carrier.shotpower//2:
+                ball.setheading(random.randint(h-self.carrier.shotrange,h+self.carrier.shotrange)) #pick a random range for the shot to be taken in
                 ball.forward(35)
                 self.shot_count+=1
                 self.shooter = self.carrier
