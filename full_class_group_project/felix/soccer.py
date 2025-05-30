@@ -288,6 +288,7 @@ def countdown(time_left):
     if time_left > 0:
         screen.ontimer(lambda: countdown(time_left-1), 1000) #ontimer doesn't want a func with a parameter, so lambda gets around that
     else:
+        unlisten()
         match_over= True
         timer_writer.goto(0,-60)
         timer_writer.write(f"{minutes}:{seconds:02}", align="center", font=("Press Start 2P", 115,"bold"))
