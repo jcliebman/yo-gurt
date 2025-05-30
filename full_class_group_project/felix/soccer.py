@@ -72,7 +72,7 @@ class Player():
 #heavy player class gives the stats for a heavy player
 class HeavyPlayer(Player):
     def __init__(self,pname, num, color):
-        super().__init__(strength = 100, dribbling=80, shotpower=100, shotrange = 5, speed = 13, pname = pname, num=num, color = color)
+        super().__init__(strength = 150, dribbling=80, shotpower=100, shotrange = 5, speed = 13, pname = pname, num=num, color = color)
         turtle.addshape(name = 'heavy.gif', shape = None)
         self.player.shape("heavy.gif")
         self.reset()
@@ -88,7 +88,7 @@ class LightPlayer(Player):
 #normal player has average stats, but has the advantage of no big weaknesses
 class NormalPlayer(Player):
     def __init__(self,pname,num, color):
-        super().__init__(strength = 70, dribbling=91, shotpower=85, shotrange = 10, speed = 16, pname = pname, num = num, color=color)
+        super().__init__(strength = 100, dribbling=91, shotpower=85, shotrange = 10, speed = 16, pname = pname, num = num, color=color)
         turtle.addshape(name = 'player.gif', shape = None)
         self.player.shape("player.gif")
         self.reset()
@@ -102,28 +102,54 @@ class Ball():
         self.shooter=None
         self.scorer = None
         self.ob = False
+        self.last_dribble = False #this is used as a way to start the cooldown timer when possesion switches players
+    def reset(self): #reset all variables before kickoff
+        self.carrier = None
+        self.goal = False
+        self.shot_count = 0
+        self.shooter=None
+        self.scorer = None
+        self.ob = False
+        self.last_dribble = False
+    def cooldown(self): #check if the cooldown period has passed to reactive the ability to steal the ball.
+        if time.time()-self.last_dribble>=1.2:
+            self.last_dribble = False
 
     def dribble(self, ball, players): #dribbling the ball takes into account the strength and loc of players
         nearby_players = []
+        if not self.last_dribble:
+            for player in players:
+                distance = math.dist((player.player.xcor(), player.player.ycor()), (ball.xcor(), ball.ycor()))
+                distance2 = math.dist((player.player.xcor(), player.player.ycor()-30), (ball.xcor(), ball.ycor()))
+                if distance < 31 or distance2 < 31: #two distances to cover more of the player
+                    nearby_players.append(player)
 
-        for player in players:
-            distance = math.dist((player.player.xcor(), player.player.ycor()), (ball.xcor(), ball.ycor()))
-            distance2 = math.dist((player.player.xcor(), player.player.ycor()-30), (ball.xcor(), ball.ycor()))
-            if distance < 31 or distance2 < 31: #two distances to cover more of the player
-                nearby_players.append(player)
-
-        if nearby_players: 
-            strengths = [p.strength for p in nearby_players] 
-            winner = random.choices(nearby_players, weights=strengths, k=1)[0] #use strength to weight random choice
-            self.carrier = winner
-            ball.setheading(winner.player.heading())
-            offset = 105 - winner.dribbling #better dribbling stat means ball stays closer
-            rad = math.radians(winner.player.heading())
+            if nearby_players: 
+                strengths = [p.strength for p in nearby_players] 
+                winner = random.choices(nearby_players, weights=strengths, k=1)[0] #use strength to weight random choice
+                if self.carrier: 
+                    if self.carrier.num != winner.num: # start cooldown timer if ball changes hands
+                        self.last_dribble = time.time()
+                if len(nearby_players)>1:
+                    self.last_dribble = time.time() #start cooldown timer if a duel is won
+                self.carrier = winner
+                ball.setheading(winner.player.heading())
+                offset = 105 - winner.dribbling #better dribbling stat means ball stays closer
+                rad = math.radians(winner.player.heading())
+                dx = offset * math.cos(rad)
+                dy = offset * math.sin(rad)
+                ball.goto(winner.player.xcor() + dx, winner.player.ycor() + dy - 30)#place ball lower on the player
+            else:
+                self.carrier = None
+        if self.last_dribble and self.carrier:
+            self.cooldown()
+            ball.setheading(self.carrier.player.heading())
+            offset = 105 - self.carrier.dribbling #better dribbling stat means ball stays closer
+            rad = math.radians(self.carrier.player.heading())
             dx = offset * math.cos(rad)
             dy = offset * math.sin(rad)
-            ball.goto(winner.player.xcor() + dx, winner.player.ycor() + dy - 30)#place ball lower on the player
-        else:
-            self.carrier = None
+            ball.goto(self.carrier.player.xcor() + dx, self.carrier.player.ycor() + dy - 30)#place ball lower on the player
+            
     #check is a goal has been scored
     #check for both shooter and carrier so that goals will always be detected
     def check_goal(self,ball,players, writers):
@@ -171,6 +197,7 @@ class Ball():
                     player.player.setheading(player.heading)
                 else:
                     player.reset()
+            self.reset()
             ball.goto(0,0)
             screen.update()
             time.sleep(2)
@@ -216,6 +243,7 @@ class Ball():
                         player.player.setheading(player.heading)
                     else:
                         player.reset()
+            self.reset()
             ball.goto(0,0)
             self.ob = False
             screen.update()
