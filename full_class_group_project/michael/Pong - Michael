@@ -48,7 +48,6 @@ player_frozen_end = 0
 opponent_frozen = False
 opponent_frozen_end = 0
 
-
 # Ball stop timer
 ball_stopped = False
 ball_stop_timer = 0
@@ -124,3 +123,91 @@ def menu_loop(options):
                     index = (index + 1) % len(options)
                 elif event.key == pygame.K_RETURN:
                     return options[index]
+
+def assign_powerups():
+    choices = ["Super Speed", "Freeze", "Stop Ball"]
+    # Clear old power-ups and add 1-3 new ones randomly
+    player_powerups.head = None
+    opponent_powerups.head = None
+    for _ in range(random.randint(1, 3)):
+        player_powerups.add_powerup(random.choice(choices))
+        opponent_powerups.add_powerup(random.choice(choices))
+
+def reset_ball():
+    global ball_speed_x, ball_speed_y, ball_stopped, ball_stop_timer
+    ball.center = (WIDTH // 2, HEIGHT // 2)
+    ball_speed_x = ball_speed_map[difficulty] * random.choice((1, -1))
+    ball_speed_y = ball_speed_map[difficulty] * random.choice((1, -1))
+    ball_stopped = False
+    ball_stop_timer = 0
+    assign_powerups()
+
+mode = menu_loop(["Single Player", "Two Player"])
+ai_enabled = (mode == "Single Player")
+if ai_enabled:
+    difficulty = menu_loop(["Easy", "Medium", "Hard"])
+reset_ball()
+
+powerup_message = ""
+powerup_message_end_time = 0
+
+running = True
+player_speed = 0
+opponent_speed = 0
+
+while running:
+    now = pygame.time.get_ticks()
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        if event.type == pygame.KEYDOWN:
+            # Player 1 paddle movement
+            if not player_frozen:
+                if event.key == pygame.K_UP:
+                    player_speed = -player_super_speed
+                elif event.key == pygame.K_DOWN:
+                    player_speed = player_super_speed
+            # Player 2 paddle movement (or AI)
+            if not ai_enabled and not opponent_frozen:
+                if event.key == pygame.K_w:
+                    opponent_speed = -opponent_super_speed
+                elif event.key == pygame.K_s:
+                    opponent_speed = opponent_super_speed
+
+            # Player 1 uses powerup (Right Shift)
+            if event.key == pygame.K_RSHIFT and not player_powerups.is_empty():
+                used_powerup = player_powerups.pop_first()
+                if used_powerup == "Super Speed":
+                    powerup_message = "Player 1 used SUPER SPEED!"
+                    # Super speed active while holding keys (already handled)
+                elif used_powerup == "Freeze":
+                    opponent_frozen = True
+                    opponent_frozen_end = now + 2000
+                    powerup_message = "Player 1 froze opponent for 2 seconds!"
+                elif used_powerup == "Stop Ball":
+                    ball_stopped = True
+                    ball_stop_timer = now + 2000
+                    powerup_message = "Player 1 stopped the ball for 2 seconds!"
+                powerup_message_end_time = now + 2000
+
+            # Player 2 uses powerup (Left Shift)
+            if not ai_enabled and event.key == pygame.K_LSHIFT and not opponent_powerups.is_empty():
+                used_powerup = opponent_powerups.pop_first()
+                if used_powerup == "Super Speed":
+                    powerup_message = "Player 2 used SUPER SPEED!"
+                elif used_powerup == "Freeze":
+                    player_frozen = True
+                    player_frozen_end = now + 2000
+                    powerup_message = "Player 2 froze opponent for 2 seconds!"
+                elif used_powerup == "Stop Ball":
+                    ball_stopped = True
+                    ball_stop_timer = now + 2000
+                    powerup_message = "Player 2 stopped the ball for 2 seconds!"
+                powerup_message_end_time = now + 2000
+
+        if event.type == pygame.KEYUP:
+            if event.key in (pygame.K_UP, pygame.K_DOWN):
+                player_speed = 0
+            if not ai_enabled and event.key in (pygame.K_w, pygame.K_s):
+                opponent_speed = 0
