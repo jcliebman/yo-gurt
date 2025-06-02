@@ -45,7 +45,7 @@
   </a>
   <div style="padding:25px"></div>
   <div class="info">
-    This is a Turtle-based graphical adventure game, not some lame soccer duel. Make sure you have Python 3 installed on your machine.  
+    This is a Turtle-based graphical adventure game. Make sure you have Python 3 installed on your machine.  
     Once you download <code>game.py</code>, unzip it (if you zipped it), open a terminal (bash on Mac/Linux, Command Prompt or PowerShell on Windows) and type:
     <br><br>
     <code>python3 game.py</code>
@@ -53,7 +53,7 @@
 
   <h2 style="font-size: 40px; margin-top: 50px; color: #fff;">Adventure Game Source Code</h2>
   <p style="color: #fff; font-size: 18px; margin-bottom: 10px;">
-    You can’t run this in your browser unless you rewrite it in JavaScript. Copy and paste into a file named <code>game.py</code> if you’re too dense to use the download link.
+    You can’t run this in your browser unless you rewrite it in JavaScript. Copy and paste into a file named <code>game.py</code>.
   </p>
   <pre>
 import turtle
