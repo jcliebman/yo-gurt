@@ -93,6 +93,10 @@ class Chess():
         ts, w, h, c1, c2 = 50, *background.get_size(), (100, 100, 100), (50, 50, 50)
         tiles = [((x*ts, y*ts, ts, ts), c1 if (x+y) % 2 == 0 else c2) for x in range((w+ts-1)//ts) for y in range((h+ts-1)//ts)]
         [pygame.draw.rect(background, color, rect) for rect, color in tiles]
+        for a in [self.p1color,self.p2color]:
+            for pieces in self.pieces[a]:
+                [y, x] = pieces.checkPos(self)
+                pygame.draw.rect(background, (255,255,255), ((x*50)+20, (y*50)+20,10,10)) ##rect(background, color, (x,y,dimensionx,dimentiony))
         window.blit(background, (0, 0))
         pygame.display.flip()
     
