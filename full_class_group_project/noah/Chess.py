@@ -86,6 +86,15 @@ class Chess():
         self.p2color = player2.color 
         self.players = [player1, player2]
         self.Cor = {} #Dictionary for Coordinates
+
+    def boarding(self):
+        window = pygame.display.set_mode((600, 400))
+        background = pygame.Surface(window.get_size())
+        ts, w, h, c1, c2 = 50, *background.get_size(), (100, 100, 100), (50, 50, 50)
+        tiles = [((x*ts, y*ts, ts, ts), c1 if (x+y) % 2 == 0 else c2) for x in range((w+ts-1)//ts) for y in range((h+ts-1)//ts)]
+        [pygame.draw.rect(background, color, rect) for rect, color in tiles]
+        window.blit(background, (0, 0))
+        pygame.display.flip()
     
     def play(self):
         self.setBoard()
