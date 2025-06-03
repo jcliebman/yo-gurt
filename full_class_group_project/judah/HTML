@@ -5,14 +5,16 @@
   <title>Yo-Gurt Games</title>
   <style>
     .info {
-      font-size: 25px;
-      color: #000000;
-      background-color: #088427;
-      border: #000000;
-      border-radius: 8px;
-      padding: 10px;
-      max-width: 750px;
-      margin-left: 330px;
+        font-size: 25px;
+        color: #000000;
+        background-color: #088427;
+        border: #000000;
+        border-radius: 8px;
+        padding: 10px;
+        max-width: 750px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 20px;
     }
     .download-button {
       padding: 12px;
@@ -29,32 +31,48 @@
   </style>
 </head>
 <body style="font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; text-align: center; background-color: #0fc73d;">
-  <h1 style="font-size: 80px;">Adventure Game</h1>
+  
+  <h1 style="font-size: 80px;">Soccer Duel</h1>
+  <a class="download-button" href="https://drive.google.com/uc?export=download&id=1hrJB5RMPvjRgdrTtG2XDBgwit_Afi1kC">
+    Download
+  </a>
+  <div style="padding:25px"></div>
+  <div class="info">
+    Soccer Duel, a 1v1 soccer game created by Felix Figueroa. Heavy players tend
+    to win the ball in duels, and they have the best shooting stats. Light players
+    are crazy fast, but they are weak and have poor shooting. Normal players are
+    average, running and shooting well, but they have no special advantage. 
+    Ensure that python 3 is installed on your device.
+  </div>
+  <div class="info"> 
+    <u>Option 1:</u><br>
+    Unzip soccergame.zip and then open README.txt. Follow the instructions to play. The device must use bash.
+  </div>
+  <div class="info"> 
+    <u>Option 2:</u><br>
+    Unzip soccergame.zip. You can now run game.py anyway you wish.
+  </div>
 
+  <!-- YOUR ADVENTURE GAME SECTION -->
+  <h1 style="font-size: 80px;">Adventure Game</h1>
   <a class="download-button" href="https://drive.google.com/uc?export=download&id=1PeNUK6zEcCNebHg9LO84bYS5dvy0ccHS">
     Download Adventure Game
   </a>
-
   <div style="padding:25px"></div>
-
   <div class="info">
-    Adventure Game is a Turtle‐based graphical adventure created by Judah.  
-    Navigate the maze, collect building materials and keys, cross rivers, unlock doors,  
-    and reach the treasure to win. You need Python 3 installed on your device.
+    Adventure Game is a graphical Python game created by Judah Johnson using Turtle graphics.
+    Navigate puzzles, collect items, unlock doors, and reach the treasure. 
+    Requires Python 3 to run.
   </div>
-
   <div class="info">
-    <u>Option 1:</u><div></div>
-    Unzip <code>Adventure Game.zip</code> and open README.txt. In your terminal (bash/PowerShell), run:
-    <br>
+    <u>Option 1:</u><br>
+    Unzip the file and read the README.txt. Run the game with:<br>
     <code>python3 "Adventure Game.py"</code>
   </div>
-
   <div class="info">
-    <u>Option 2:</u><div></div>
-    Unzip <code>Adventure Game.zip</code>. Then simply type:
-    <br>
-    <code>python3 "Adventure Game.py"</code>
+    <u>Option 2:</u><br>
+    Just unzip it and double-click or open via your terminal.
   </div>
+
 </body>
 </html>
