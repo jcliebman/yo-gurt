@@ -97,6 +97,7 @@ class Chess():
             for pieces in self.pieces[a]:
                 [y, x] = pieces.checkPos(self)
                 pygame.draw.rect(background, (255,255,255), ((x*50)+20, (y*50)+20,10,10)) ##rect(background, color, (x,y,dimensionx,dimentiony))
+        pygame.draw.rect(background, (0,255,255), (400,0,200,400))##rect(background, color, (x,y,dimensionx,dimentiony))
         window.blit(background, (0, 0))
         pygame.display.flip()
     
