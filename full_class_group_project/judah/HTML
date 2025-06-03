@@ -5,16 +5,16 @@
   <title>Yo-Gurt Games</title>
   <style>
     .info {
-        font-size: 25px;
-        color: #000000;
-        background-color: #088427;
-        border: #000000;
-        border-radius: 8px;
-        padding: 10px;
-        max-width: 750px;
-        margin-left: auto;
-        margin-right: auto;
-        margin-top: 20px;
+      font-size: 25px;
+      color: #000000;
+      background-color: #088427;
+      border: #000000;
+      border-radius: 8px;
+      padding: 10px;
+      max-width: 750px;
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 20px;
     }
     .download-button {
       padding: 12px;
@@ -32,11 +32,12 @@
 </head>
 <body style="font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; text-align: center; background-color: #0fc73d;">
   
+  <!-- Soccer Duel Section -->
   <h1 style="font-size: 80px;">Soccer Duel</h1>
   <a class="download-button" href="https://drive.google.com/uc?export=download&id=1hrJB5RMPvjRgdrTtG2XDBgwit_Afi1kC">
     Download
   </a>
-  <div style="padding:25px"></div>
+  <div style="padding: 25px;"></div>
   <div class="info">
     Soccer Duel, a 1v1 soccer game created by Felix Figueroa. Heavy players tend
     to win the ball in duels, and they have the best shooting stats. Light players
@@ -53,26 +54,26 @@
     Unzip soccergame.zip. You can now run game.py anyway you wish.
   </div>
 
-  <!-- ADVENTURE GAME SECTION -->
-  <h1 style="font-size: 80px;">Adventure Game</h1>
-  <a class="download-button" href="https://drive.google.com/uc?export=download&id=1PeNUK6zEcCNebHg9LO84bYS5dvy0ccHS">
-    Download Adventure Game
+  <!-- Graphical Adventure Game Section -->
+  <div style="padding: 40px;"></div>
+  <h1 style="font-size: 80px;">Graphical Adventure</h1>
+  <a class="download-button" href="https://drive.google.com/uc?export=download&id=1t7u-PFp64XjeZ74BxoKb_DdJNpi0gThl">
+    Download
   </a>
-  <div style="padding:25px"></div>
+  <div style="padding: 25px;"></div>
   <div class="info">
-    Adventure Game is a graphical Python game created by Judah Johnson using Turtle graphics.
-    Navigate puzzles, collect items, unlock doors, and reach the treasure. 
-    Requires Python 3 to run.
+    Graphical Adventure is a visual text-based exploration game by Judah Johnson. Players navigate a strange environment using on-screen prompts and logic-based choices. The game blends storytelling and interactive puzzles with basic Python graphics. 
+    Ensure that Python 3 is installed on your device.
   </div>
   <div class="info">
     <u>Option 1:</u><br>
-    Unzip the file and read the README.txt. Run the game with:<br>
-    <code>python3 "Adventure Game.py"</code>
+    Download and unzip the folder. Open <code>README.txt</code> if available, and follow the instructions. Use a terminal with bash.
   </div>
   <div class="info">
     <u>Option 2:</u><br>
-    Just unzip it and double-click or open via your terminal.
+    Open a terminal in the unzipped folder and run <code>python3 game.py</code>.
   </div>
 
 </body>
 </html>
+
