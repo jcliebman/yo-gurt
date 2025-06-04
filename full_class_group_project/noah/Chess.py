@@ -638,6 +638,7 @@ if __name__ == "__main__": #Main Function
     SHOW_WINNER = True #Toggle for if you want the winner shown. 
 
     pygame.init()
+    clock = pygame.time.Clock()
     
     #playerW = HumanPlayer("White")
     playerW = AIPlayerRandom("White")
