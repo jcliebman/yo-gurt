@@ -1,4 +1,5 @@
 import random #For Random AI Player
+import pygame
 
 #Player Class
 class Player():
