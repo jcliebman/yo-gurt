@@ -104,6 +104,22 @@ class Chess():
                 window.blit(text1, textRect1)
         pygame.display.flip()
         clock.tick(60)
+        
+    def winscreen(self, winner): 
+        screen = pygame.display.set_mode((300,300))
+        font1 = pygame.font.SysFont('freesanbold.ttf', 40)
+        text1 = font1.render("White Wins!" if winner=='w' else "Black Wins!", True, ((255,255,255) if winner=="w" else (0,0,0)))
+        screen.fill((0,0,0) if winner=="w" else (255,255,255))
+        textRect1 = text1.get_rect()
+        textRect1.center = (150, 150)
+        screen.blit(text1, textRect1)
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+                pygame.display.flip()
+                clock.tick(60)
     
     def play(self):
         self.setBoard()
@@ -126,6 +142,7 @@ class Chess():
                         else:
                             print("White Wins!")
                         self.showBoard(True)
+                        self.winscreen(winner)
                     return winner
                     
     def checkElims(self): #Checks which pieces are on the board. If it's not on the board, it's marked as eliminated
