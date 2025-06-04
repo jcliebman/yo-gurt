@@ -656,5 +656,5 @@ if __name__ == "__main__": #Main Function
             bk += 1
             
     print("Black:", bk, "| White:", wt)
-    game.allPieceCoords()
+    #game.allPieceCoords()
     game.showBoard(True)
