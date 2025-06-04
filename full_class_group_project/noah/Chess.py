@@ -88,21 +88,26 @@ class Chess():
         self.Cor = {} #Dictionary for Coordinates
 
     def boarding(self):
-        window = pygame.display.set_mode((600, 400))
+        window = pygame.display.set_mode((400, 400))
         background = pygame.Surface(window.get_size())
         ts, w, h, c1, c2 = 50, *background.get_size(), (100, 100, 100), (50, 50, 50)
         tiles = [((x*ts, y*ts, ts, ts), c1 if (x+y) % 2 == 0 else c2) for x in range((w+ts-1)//ts) for y in range((h+ts-1)//ts)]
         [pygame.draw.rect(background, color, rect) for rect, color in tiles]
+        window.blit(background, (0, 0))
         for a in [self.p1color,self.p2color]:
             for pieces in self.pieces[a]:
                 [y, x] = pieces.checkPos(self)
-                pygame.draw.rect(background, (255,255,255), ((x*50)+20, (y*50)+20,10,10)) ##rect(background, color, (x,y,dimensionx,dimentiony))
-        pygame.draw.rect(background, (0,255,255), (400,0,200,400))##rect(background, color, (x,y,dimensionx,dimentiony))
-        window.blit(background, (0, 0))
+                font1 = pygame.font.SysFont('freesanbold.ttf', 40)
+                text1 = font1.render(pieces.type, True, ((255,255,255) if pieces.color=="w" else (0,0,0)))
+                textRect1 = text1.get_rect()
+                textRect1.center = ((x*50)+25, (y*50)+25)
+                window.blit(text1, textRect1)
         pygame.display.flip()
+        clock.tick(60)
     
     def play(self):
         self.setBoard()
+        self.boarding()
         while True:
             for player in self.players:
                 self.showBoard(SHOW_BOARD)
@@ -153,6 +158,7 @@ class Chess():
             for y in range(8):
                 print (y+1, '', '|',self.board[y][0], '|',self.board[y][1], '|',self.board[y][2], '|',self.board[y][3], '|',self.board[y][4], '|',self.board[y][5], '|',self.board[y][6], '|',self.board[y][7],'|',)
                 print('   ',' ---  ', '---  ', '---  ', '---  ', '---  ', '---  ', '---  ', '---  ')
+            self.boarding()
             
     def allPieceCoords(self): #Method added to bug test
         for a in [self.p1color,self.p2color]:
