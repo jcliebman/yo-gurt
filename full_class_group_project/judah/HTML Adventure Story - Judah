@@ -54,13 +54,13 @@
     Unzip soccergame.zip. You can now run game.py anyway you wish.
   </div>
 
-  <!-- Graphical Adventure Game Section -->
-  <div style="padding: 40px;"></div>
+  <!-- ADVENTURE GAME SECTION -->
+  <div style="padding:40px"></div>
   <h1 style="font-size: 80px;">Graphical Adventure</h1>
-  <a class="download-button" href="https://drive.google.com/uc?export=download&id=1t7u-PFp64XjeZ74BxoKb_DdJNpi0gThl">
+  <a class="download-button" href="https://drive.google.com/uc?export=download&id=1XZKLA5Q96QZc8-JOhvK4Umdfnszpo1Mv">
     Download
   </a>
-  <div style="padding: 25px;"></div>
+  <div style="padding:25px"></div>
   <div class="info">
     Graphical Adventure is a visual text-based exploration game by Judah Johnson. Players navigate a strange environment using on-screen prompts and logic-based choices. The game blends storytelling and interactive puzzles with basic Python graphics. 
     Ensure that Python 3 is installed on your device.
