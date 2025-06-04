@@ -636,6 +636,8 @@ if __name__ == "__main__": #Main Function
     
     SHOW_BOARD = True #Toggle for if you want the board shown
     SHOW_WINNER = True #Toggle for if you want the winner shown. 
+
+    pygame.init()
     
     #playerW = HumanPlayer("White")
     playerW = AIPlayerRandom("White")
